@@ -33,7 +33,7 @@ class UserDetailsViewModel(application: Application) : AndroidViewModel(applicat
                 )
                 val response = userDetailsRepo.userDetails(userDetailsRequest = userDetailsRequest)
 
-                if (response?.code() == 200) {
+                if (response?.code() == 201) {
                     userDetailsResult.value = BaseResponse.Success(response.body())
                 } else {
                     BaseResponse.Error(response?.message())

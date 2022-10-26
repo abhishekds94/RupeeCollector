@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.avidprogrammers.rupeecollector.R
 import com.avidprogrammers.rupeecollector.databinding.ActivityHomeBinding
 import com.avidprogrammers.rupeecollector.databinding.ActivityLoginBinding
@@ -31,76 +33,14 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.userDetailsResult.observe(this) {
-            when (it) {
-                is BaseResponse.Loading -> {
-                    showLoading()
-                }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
-                is BaseResponse.Success -> {
-                    stopLoading()
-                    processUserDetails(it.data)
-                }
+        //setup bottom nav bar
+        binding.bottomNav.setupWithNavController(navController)
+        binding.bottomNav.itemIconTintList = null
 
-                is BaseResponse.Error -> {
-                    processError(it.msg)
-                }
-                else -> {
-                    stopLoading()
-                }
-            }
-        }
-
-        binding.userDetailsBtn.setOnClickListener {
-            uploadUserDetails()
-        }
-
-    }
-
-    private fun uploadUserDetails() {
-        val userIdValue = SessionManager.getUserId(applicationContext)
-        val userId = userIdValue?.toInt()
-        val userPin = 1234
-        val address = binding?.address?.text.toString()
-        val imei = binding?.imei?.text.toString()
-        val description = binding?.description?.text.toString()
-        val timezone = binding?.timezone?.text.toString()
-        val company = binding?.company?.text.toString()
-        viewModel.userDetails(
-            userId = userId!!,
-            userPin = userPin,
-            address = address,
-            imei = imei,
-            description = description,
-            timezone = timezone,
-            company = company
-        )
-    }
-
-    private fun showLoading() {
-        binding.progressBarContainer.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        binding.progressBarContainer.visibility = View.GONE
-    }
-
-    private fun processUserDetails(data: UserDetailsResponse?) {
-        if (data!!.message == "OK") {
-            showToast("Success!!: ${data.message}")
-            stopLoading()
-        } else {
-            processError(data.message)
-        }
-    }
-
-    private fun processError(msg: String?) {
-        showToast("Error:$msg")
-        Log.d("userDetailScreen123", "ErrorMessage- $msg")
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
 }

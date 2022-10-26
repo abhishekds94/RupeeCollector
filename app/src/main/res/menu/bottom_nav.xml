@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/userDetailsFragment"
+        android:icon="@drawable/rupee"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/entriesFragment"
+        android:icon="@drawable/rupee"
+        android:title="Details"/>
+
+</menu>
